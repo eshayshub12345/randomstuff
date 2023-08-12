@@ -1,109 +1,109 @@
-local function CreateUIElement(kind, parent, properties)
-    local element = Instance.new(kind)
-    for property, value in pairs(properties) do
-        element[property] = value
-    end
-    element.Parent = parent
-    return element
-end
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
-local Library = {}
+function Library:Window(GameName, ToggleKey)
+    GameName = GameName or "Unknown"
+    ToggleKey = ToggleKey or Enum.KeyCode.LeftAlt
 
-function Library.new()
-    local self = {
-        container = CreateUIElement("Frame", game.Players.LocalPlayer.PlayerGui, {
-            Size = UDim2.new(0, 400, 0, 300),
-            Position = UDim2.new(0.5, -200, 0.5, -150),
-            BackgroundColor3 = Color3.fromRGB(40, 40, 40),
-            BorderSizePixel = 0,
-            Visible = true,
-        }),
-        elements = {},
-    }
+    -- Instances
 
-    function self:AddButton(text, callback)
-        local button = CreateUIElement("TextButton", self.container, {
-            Size = UDim2.new(0, 100, 0, 30),
-            Position = UDim2.new(0, 10, 0, #self.elements * 40 + 10),
-            BackgroundColor3 = Color3.fromRGB(60, 60, 60),
-            BorderSizePixel = 0,
-            Text = text,
-            TextColor3 = Color3.fromRGB(255, 255, 255),
-            TextSize = 16,
-        })
-        button.MouseButton1Click:Connect(callback)
-        table.insert(self.elements, button)
-    end
+    local Advancedware = Instance.new("ScreenGui")
+    local FatherFrameOutline = Instance.new("Frame")
+    local FatherFrame = Instance.new("Frame")
+    local TabHolder = Instance.new("Frame")
+    local Header = Instance.new("TextLabel")
+    local WareText = Instance.new("TextLabel")
+    local GameText = Instance.new("TextLabel")
+    local TopLine = Instance.new("Frame")
+    local ContainerHolder = Instance.new("Frame")
 
-    function self:AddDropdown(text, options, callback)
-        local dropdown = CreateUIElement("Frame", self.container, {
-            Size = UDim2.new(0, 100, 0, 30),
-            Position = UDim2.new(0, 10, 0, #self.elements * 40 + 10),
-            BackgroundColor3 = Color3.fromRGB(60, 60, 60),
-            BorderSizePixel = 0,
-        })
+    -- Set up properties
 
-        local title = CreateUIElement("TextLabel", dropdown, {
-            Size = UDim2.new(1, -10, 0, 20),
-            Position = UDim2.new(0, 5, 0, 5),
-            BackgroundTransparency = 1,
-            Text = text,
-            TextColor3 = Color3.fromRGB(255, 255, 255),
-            TextSize = 16,
-            TextXAlignment = Enum.TextXAlignment.Left,
-        })
+    Advancedware.Name = "Advancedware"
+    Advancedware.DisplayOrder = 10
+    Advancedware.ResetOnSpawn = false
+    Advancedware.Parent = CoreGui
 
-        local selectedOption = options[1]
+    FatherFrameOutline.Name = "FatherFrameOutline"
+    FatherFrameOutline.Parent = Advancedware
+    FatherFrameOutline.AnchorPoint = Vector2.new(0.5, 0.5)
+    FatherFrameOutline.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    FatherFrameOutline.BackgroundTransparency = 0.750
+    FatherFrameOutline.BorderColor3 = Color3.fromRGB(27, 42, 53)
+    FatherFrameOutline.Position = UDim2.new(0.5, 0, 0.5, 0)
+    FatherFrameOutline.Size = UDim2.new(0, 500, 0, 350)
+    FatherFrameOutline.Visible = false
 
-        local dropdownButton = CreateUIElement("TextButton", dropdown, {
-            Size = UDim2.new(1, -10, 0, 20),
-            Position = UDim2.new(0, 5, 0, 25),
-            BackgroundColor3 = Color3.fromRGB(80, 80, 80),
-            BorderSizePixel = 0,
-            Text = selectedOption,
-            TextColor3 = Color3.fromRGB(255, 255, 255),
-            TextSize = 16,
-        })
-        local optionsFrame = nil
-        dropdownButton.MouseButton1Click:Connect(function()
-            if optionsFrame then
-                optionsFrame:Destroy()
-                optionsFrame = nil
-            else
-                optionsFrame = CreateUIElement("Frame", dropdown, {
-                    Size = UDim2.new(1, 0, 0, #options * 30),
-                    Position = UDim2.new(0, 0, 0, 45),
-                    BackgroundColor3 = Color3.fromRGB(60, 60, 60),
-                    BorderSizePixel = 0,
-                })
+    FatherFrame.Name = "FatherFrame"
+    FatherFrame.Parent = FatherFrameOutline
+    FatherFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    FatherFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    FatherFrame.Size = UDim2.new(1, 0, 1, 0)
 
-                for i, optionText in ipairs(options) do
-                    local optionButton = CreateUIElement("TextButton", optionsFrame, {
-                        Size = UDim2.new(1, 0, 0, 30),
-                        Position = UDim2.new(0, 0, 0, (i - 1) * 30),
-                        BackgroundColor3 = Color3.fromRGB(80, 80, 80),
-                        BorderSizePixel = 0,
-                        Text = optionText,
-                        TextColor3 = Color3.fromRGB(255, 255, 255),
-                        TextSize = 16,
-                    })
-                    optionButton.MouseButton1Click:Connect(function()
-                        selectedOption = optionText
-                        dropdownButton.Text = selectedOption
-                        if optionsFrame then
-                            optionsFrame:Destroy()
-                            optionsFrame = nil
-                        end
-                        callback(selectedOption)
-                    end)
-                end
-            end
-        end)
+    TabHolder.Name = "TabHolder"
+    TabHolder.Parent = FatherFrame
+    TabHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    TabHolder.Position = UDim2.new(0, 0, 0.0769231179, 0)
+    TabHolder.Size = UDim2.new(0, 150, 0, 280)
 
-        table.insert(self.elements, dropdown)
+    Header.Name = "Header"
+    Header.Parent = FatherFrame
+    Header.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Header.Size = UDim2.new(1, 0, 0, 20)
+    Header.Font = Enum.Font.Code
+    Header.Text = " Advancedware"
+    Header.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Header.TextSize = 14.000
+    Header.TextXAlignment = Enum.TextXAlignment.Left
+
+    WareText.Name = "WareText"
+    WareText.Parent = Header
+    WareText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    WareText.BackgroundTransparency = 1.000
+    WareText.Position = UDim2.new(0, 95, 0, 0)
+    WareText.Size = UDim2.new(0, 55, 1, 0)
+    WareText.Font = Enum.Font.Code
+    WareText.Text = "Ware"
+    WareText.TextColor3 = Color3.fromRGB(85, 170, 255)
+    WareText.TextSize = 14.000
+
+    GameText.Name = "GameText"
+    GameText.Parent = Header
+    GameText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    GameText.BackgroundTransparency = 1.000
+    GameText.Position = UDim2.new(0, 145, 0, 0)
+    GameText.Size = UDim2.new(0, 55, 1, 0)
+    GameText.Font = Enum.Font.Code
+    GameText.Text = GameName
+    GameText.TextColor3 = Color3.fromRGB(85, 170, 255)
+    GameText.TextSize = 14.000
+
+    TopLine.Name = "TopLine"
+    TopLine.Parent = Header
+    TopLine.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+    TopLine.BorderSizePixel = 0
+    TopLine.Position = UDim2.new(0, 0, 1, -1)
+    TopLine.Size = UDim2.new(1, 0, 0, 1)
+
+    ContainerHolder.Name = "ContainerHolder"
+    ContainerHolder.Parent = FatherFrame
+    ContainerHolder.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    ContainerHolder.Position = UDim2.new(0.200000003, 0, 0.0769231248, 0)
+    ContainerHolder.Size = UDim2.new(0.800000012, 0, 0.923076928, 0)
+
+    -- Effects
+
+    local function ToggleGUI()
+        FatherFrameOutline.Visible = not FatherFrameOutline.Visible
     end
 
-    return self
+    UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+        if not gameProcessedEvent and input.KeyCode == ToggleKey then
+            ToggleGUI()
+        end
+    end)
 end
 
 return Library
