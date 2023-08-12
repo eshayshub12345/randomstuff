@@ -1,0 +1,109 @@
+local Library = {}
+
+local function CreateUIElement(kind, parent, properties)
+    local element = Instance.new(kind)
+    for property, value in pairs(properties) do
+        element[property] = value
+    end
+    element.Parent = parent
+    return element
+end
+
+function Library.new()
+    local self = {
+        container = CreateUIElement("Frame", game.Players.LocalPlayer.PlayerGui, {
+            Size = UDim2.new(0, 400, 0, 300),
+            Position = UDim2.new(0.5, -200, 0.5, -150),
+            BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+            BorderSizePixel = 0,
+            Visible = true,
+        }),
+        elements = {},
+    }
+
+    function self:AddButton(text, callback)
+        local button = CreateUIElement("TextButton", self.container, {
+            Size = UDim2.new(0, 100, 0, 30),
+            Position = UDim2.new(0, 10, 0, #self.elements * 40 + 10),
+            BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+            BorderSizePixel = 0,
+            Text = text,
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            TextSize = 16,
+        })
+        button.MouseButton1Click:Connect(callback)
+        table.insert(self.elements, button)
+    end
+
+    function self:AddDropdown(text, options, callback)
+        local dropdown = CreateUIElement("Frame", self.container, {
+            Size = UDim2.new(0, 100, 0, 30),
+            Position = UDim2.new(0, 10, 0, #self.elements * 40 + 10),
+            BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+            BorderSizePixel = 0,
+        })
+
+        local title = CreateUIElement("TextLabel", dropdown, {
+            Size = UDim2.new(1, -10, 0, 20),
+            Position = UDim2.new(0, 5, 0, 5),
+            BackgroundTransparency = 1,
+            Text = text,
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            TextSize = 16,
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+
+        local selectedOption = options[1]
+
+        local dropdownButton = CreateUIElement("TextButton", dropdown, {
+            Size = UDim2.new(1, -10, 0, 20),
+            Position = UDim2.new(0, 5, 0, 25),
+            BackgroundColor3 = Color3.fromRGB(80, 80, 80),
+            BorderSizePixel = 0,
+            Text = selectedOption,
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            TextSize = 16,
+        })
+        local optionsFrame = nil
+        dropdownButton.MouseButton1Click:Connect(function()
+            if optionsFrame then
+                optionsFrame:Destroy()
+                optionsFrame = nil
+            else
+                optionsFrame = CreateUIElement("Frame", dropdown, {
+                    Size = UDim2.new(1, 0, 0, #options * 30),
+                    Position = UDim2.new(0, 0, 0, 45),
+                    BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+                    BorderSizePixel = 0,
+                })
+
+                for i, optionText in ipairs(options) do
+                    local optionButton = CreateUIElement("TextButton", optionsFrame, {
+                        Size = UDim2.new(1, 0, 0, 30),
+                        Position = UDim2.new(0, 0, 0, (i - 1) * 30),
+                        BackgroundColor3 = Color3.fromRGB(80, 80, 80),
+                        BorderSizePixel = 0,
+                        Text = optionText,
+                        TextColor3 = Color3.fromRGB(255, 255, 255),
+                        TextSize = 16,
+                    })
+                    optionButton.MouseButton1Click:Connect(function()
+                        selectedOption = optionText
+                        dropdownButton.Text = selectedOption
+                        if optionsFrame then
+                            optionsFrame:Destroy()
+                            optionsFrame = nil
+                        end
+                        callback(selectedOption)
+                    end)
+                end
+            end
+        end)
+
+        table.insert(self.elements, dropdown)
+    end
+
+    return self
+end
+
+return Library
