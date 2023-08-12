@@ -1,99 +1,15 @@
 local CoreGui = game:GetService("CoreGui")
-local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+
+local Library = {}
 
 function Library:Window(GameName, ToggleKey)
     GameName = GameName or "Unknown"
     ToggleKey = ToggleKey or Enum.KeyCode.LeftAlt
 
-    -- Instances
+    -- Rest of your code for creating the GUI ...
 
-    local Advancedware = Instance.new("ScreenGui")
-    local FatherFrameOutline = Instance.new("Frame")
-    local FatherFrame = Instance.new("Frame")
-    local TabHolder = Instance.new("Frame")
-    local Header = Instance.new("TextLabel")
-    local WareText = Instance.new("TextLabel")
-    local GameText = Instance.new("TextLabel")
-    local TopLine = Instance.new("Frame")
-    local ContainerHolder = Instance.new("Frame")
-
-    -- Set up properties
-
-    Advancedware.Name = "Advancedware"
-    Advancedware.DisplayOrder = 10
-    Advancedware.ResetOnSpawn = false
-    Advancedware.Parent = CoreGui
-
-    FatherFrameOutline.Name = "FatherFrameOutline"
-    FatherFrameOutline.Parent = Advancedware
-    FatherFrameOutline.AnchorPoint = Vector2.new(0.5, 0.5)
-    FatherFrameOutline.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    FatherFrameOutline.BackgroundTransparency = 0.750
-    FatherFrameOutline.BorderColor3 = Color3.fromRGB(27, 42, 53)
-    FatherFrameOutline.Position = UDim2.new(0.5, 0, 0.5, 0)
-    FatherFrameOutline.Size = UDim2.new(0, 500, 0, 350)
-    FatherFrameOutline.Visible = false
-
-    FatherFrame.Name = "FatherFrame"
-    FatherFrame.Parent = FatherFrameOutline
-    FatherFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    FatherFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    FatherFrame.Size = UDim2.new(1, 0, 1, 0)
-
-    TabHolder.Name = "TabHolder"
-    TabHolder.Parent = FatherFrame
-    TabHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    TabHolder.Position = UDim2.new(0, 0, 0.0769231179, 0)
-    TabHolder.Size = UDim2.new(0, 150, 0, 280)
-
-    Header.Name = "Header"
-    Header.Parent = FatherFrame
-    Header.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    Header.Size = UDim2.new(1, 0, 0, 20)
-    Header.Font = Enum.Font.Code
-    Header.Text = " Advancedware"
-    Header.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Header.TextSize = 14.000
-    Header.TextXAlignment = Enum.TextXAlignment.Left
-
-    WareText.Name = "WareText"
-    WareText.Parent = Header
-    WareText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    WareText.BackgroundTransparency = 1.000
-    WareText.Position = UDim2.new(0, 95, 0, 0)
-    WareText.Size = UDim2.new(0, 55, 1, 0)
-    WareText.Font = Enum.Font.Code
-    WareText.Text = "Ware"
-    WareText.TextColor3 = Color3.fromRGB(85, 170, 255)
-    WareText.TextSize = 14.000
-
-    GameText.Name = "GameText"
-    GameText.Parent = Header
-    GameText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    GameText.BackgroundTransparency = 1.000
-    GameText.Position = UDim2.new(0, 145, 0, 0)
-    GameText.Size = UDim2.new(0, 55, 1, 0)
-    GameText.Font = Enum.Font.Code
-    GameText.Text = GameName
-    GameText.TextColor3 = Color3.fromRGB(85, 170, 255)
-    GameText.TextSize = 14.000
-
-    TopLine.Name = "TopLine"
-    TopLine.Parent = Header
-    TopLine.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
-    TopLine.BorderSizePixel = 0
-    TopLine.Position = UDim2.new(0, 0, 1, -1)
-    TopLine.Size = UDim2.new(1, 0, 0, 1)
-
-    ContainerHolder.Name = "ContainerHolder"
-    ContainerHolder.Parent = FatherFrame
-    ContainerHolder.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    ContainerHolder.Position = UDim2.new(0.200000003, 0, 0.0769231248, 0)
-    ContainerHolder.Size = UDim2.new(0.800000012, 0, 0.923076928, 0)
-
-    -- Effects
+    -- Effects ...
 
     local function ToggleGUI()
         FatherFrameOutline.Visible = not FatherFrameOutline.Visible
