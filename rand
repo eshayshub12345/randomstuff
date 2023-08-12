@@ -1,5 +1,3 @@
-local Library = {}
-
 local function CreateUIElement(kind, parent, properties)
     local element = Instance.new(kind)
     for property, value in pairs(properties) do
@@ -8,6 +6,8 @@ local function CreateUIElement(kind, parent, properties)
     element.Parent = parent
     return element
 end
+
+local Library = {}
 
 function Library.new()
     local self = {
