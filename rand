@@ -1,25 +1,153 @@
-local CoreGui = game:GetService("CoreGui")
-local UserInputService = game:GetService("UserInputService")
+-- Alternative UI Library
+
+local function CreateButton(name, parent, text, size)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Parent = parent
+    button.Size = size or UDim2.new(1, 0, 0, 30)
+    button.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.Code
+    button.TextSize = 14
+    return button
+end
+
+local function CreateToggle(name, parent, text, callback)
+    local toggle = Instance.new("TextButton")
+    toggle.Name = name
+    toggle.Parent = parent
+    toggle.Size = UDim2.new(1, 0, 0, 30)
+    toggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    toggle.Text = text
+    toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggle.Font = Enum.Font.Code
+    toggle.TextSize = 14
+
+    local enabled = false
+
+    toggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        if enabled then
+            toggle.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+        else
+            toggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        end
+        callback(enabled)
+    end)
+end
+
+local function CreateKeybindToggle(name, parent, text, callback)
+    local keybindToggle = Instance.new("TextButton")
+    keybindToggle.Name = name
+    keybindToggle.Parent = parent
+    keybindToggle.Size = UDim2.new(1, 0, 0, 30)
+    keybindToggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    keybindToggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    keybindToggle.Text = text
+    keybindToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    keybindToggle.Font = Enum.Font.Code
+    keybindToggle.TextSize = 14
+
+    local enabled = false
+    local key = nil
+
+    keybindToggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        if enabled then
+            keybindToggle.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+        else
+            keybindToggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        end
+        callback(enabled, key)
+    end)
+
+    keybindToggle.MouseButton2Click:Connect(function()
+        key = nil
+        keybindToggle.Text = text .. " [None]"
+    end)
+
+    local userinputService = game:GetService("UserInputService")
+
+    userinputService.InputBegan:Connect(function(input, gameProcessedEvent)
+        if not gameProcessedEvent and keybindToggle and enabled then
+            key = input.KeyCode
+            keybindToggle.Text = text .. " [" .. tostring(key) .. "]"
+            callback(enabled, key)
+        end
+    end)
+end
+
+local function CreateSection(name, parent)
+    local section = Instance.new("Frame")
+    section.Name = name
+    section.Parent = parent
+    section.Size = UDim2.new(1, 0, 0, 150)
+    section.BackgroundTransparency = 1
+
+    return section
+end
+
+local function CreateTab(name, parent)
+    local tab = Instance.new("Frame")
+    tab.Name = name
+    tab.Parent = parent
+    tab.Size = UDim2.new(0, 200, 1, 0)
+    tab.BackgroundTransparency = 1
+
+    return tab
+end
 
 local Library = {}
 
-function Library:Window(GameName, ToggleKey)
-    GameName = GameName or "Unknown"
-    ToggleKey = ToggleKey or Enum.KeyCode.LeftAlt
+function Library.CreateUI()
+    local ui = Instance.new("ScreenGui")
+    ui.Name = "CustomUI"
+    ui.Parent = game.Players.LocalPlayer.PlayerGui
 
-    -- Rest of your code for creating the GUI ...
+    return ui
+end
 
-    -- Effects ...
+function Library.CreateTabContainer(parent)
+    local tabContainer = CreateButton("TabContainer", parent, "", UDim2.new(0, 200, 1, 0))
+    return tabContainer
+end
 
-    local function ToggleGUI()
-        FatherFrameOutline.Visible = not FatherFrameOutline.Visible
-    end
+function Library.CreateSectionContainer(parent)
+    local sectionContainer = Instance.new("Frame")
+    sectionContainer.Name = "SectionContainer"
+    sectionContainer.Parent = parent
+    sectionContainer.Position = UDim2.new(0, 210, 0, 0)
+    sectionContainer.Size = UDim2.new(1, -210, 1, 0)
+    sectionContainer.BackgroundTransparency = 1
 
-    UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-        if not gameProcessedEvent and input.KeyCode == ToggleKey then
-            ToggleGUI()
-        end
-    end)
+    return sectionContainer
+end
+
+function Library.CreateTab(tabContainer, name)
+    local tab = CreateButton(name, tabContainer, name)
+    return tab
+end
+
+function Library.CreateSection(sectionContainer, name)
+    local section = CreateSection(name, sectionContainer)
+    return section
+end
+
+function Library.CreateButton(section, name, text, callback)
+    local button = CreateButton(name, section, text)
+    button.MouseButton1Click:Connect(callback)
+    return button
+end
+
+function Library.CreateToggle(section, name, text, callback)
+    CreateToggle(name, section, text, callback)
+end
+
+function Library.CreateKeybindToggle(section, name, text, callback)
+    CreateKeybindToggle(name, section, text, callback)
 end
 
 return Library
