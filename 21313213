@@ -1510,7 +1510,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 		local Tab = {}
 
 
-		-- Button
 		function Tab:CreateButton(ButtonSettings)
 			local ButtonValue = {Locked = false}
 
